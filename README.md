@@ -30,7 +30,7 @@ The abstract class DtoTestCase has 3 required methods for you to implement:
 - `getTestValuesForMethod`
 
 And at this moment one optional setting:
-    - $markEmptyAlsSkipped
+    - $markEmptyAsSkipped
 
 The `getInstance` method should return a testable object. This object is only requested twice during all the tests.
 First for the properties and the second time when the methods are tested. 
