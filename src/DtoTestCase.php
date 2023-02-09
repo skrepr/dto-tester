@@ -65,7 +65,7 @@ abstract class DtoTestCase extends TestCase
         }
 
         if (count($publicGetSetters) === 0) {
-            if ($this->markEmptyAlsSkipped) {
+            if ($this->markEmptyAsSkipped) {
                 $this->markTestSkipped('No public getter/setters for ' . get_class($object));
             } else {
                 $this->assertTrue(true, 'No public getter/setters for ' . get_class($object));
