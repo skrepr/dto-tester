@@ -12,7 +12,11 @@ abstract class DtoTestCase extends TestCase
     abstract protected function getTestValuesForProperty(string $propertyName, string $propertyType): ?array;
     abstract protected function getTestValuesForMethod(string $methodName, string $parameterName, string $parameterType): ?array;
 
-    protected bool $markEmptyAlsSkipped = true;
+    /**
+     * @deprecated Use $markEmptyAsSkipped
+     */
+    protected ?bool $markEmptyAlsSkipped = null;
+    protected bool $markEmptyAsSkipped = true;
 
     final public function testProperties(): void
     {
@@ -21,7 +25,12 @@ abstract class DtoTestCase extends TestCase
         $publicProperties = $reflectionObject->getProperties(\ReflectionProperty::IS_PUBLIC);
 
         if (count($publicProperties) === 0) {
-            if ($this->markEmptyAlsSkipped) {
+            if ($this->markEmptyAlsSkipped !== null) {
+                $this->markEmptyAsSkipped = $this->markEmptyAlsSkipped;
+                trigger_error('$markEmptyAlsSkipped is deprecated, use $markEmptyAsSkipped', E_USER_DEPRECATED);
+            }
+
+            if ($this->markEmptyAsSkipped) {
                 $this->markTestSkipped('No public properties for ' . get_class($this->getInstance()));
             } else {
                 $this->assertTrue(true, 'No public properties for ' . get_class($this->getInstance()));
