@@ -15,7 +15,7 @@ abstract class DtoTestCase extends TestCase
     /**
      * @deprecated Use $markEmptyAsSkipped
      */
-    protected ?bool $markEmptyAlsSkipped = null;
+    protected bool $markEmptyAlsSkipped;
     protected bool $markEmptyAsSkipped = true;
 
     final public function testProperties(): void
@@ -25,7 +25,7 @@ abstract class DtoTestCase extends TestCase
         $publicProperties = $reflectionObject->getProperties(\ReflectionProperty::IS_PUBLIC);
 
         if (count($publicProperties) === 0) {
-            if ($this->markEmptyAlsSkipped !== null) {
+            if (isset($this->markEmptyAlsSkipped)) {
                 $this->markEmptyAsSkipped = $this->markEmptyAlsSkipped;
                 trigger_error('$markEmptyAlsSkipped is deprecated, use $markEmptyAsSkipped', E_USER_DEPRECATED);
             }
@@ -74,6 +74,11 @@ abstract class DtoTestCase extends TestCase
         }
 
         if (count($publicGetSetters) === 0) {
+            if (isset($this->markEmptyAlsSkipped)) {
+                $this->markEmptyAsSkipped = $this->markEmptyAlsSkipped;
+                trigger_error('$markEmptyAlsSkipped is deprecated, use $markEmptyAsSkipped', E_USER_DEPRECATED);
+            }
+
             if ($this->markEmptyAsSkipped) {
                 $this->markTestSkipped('No public getter/setters for ' . get_class($object));
             } else {
