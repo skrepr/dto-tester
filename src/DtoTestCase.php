@@ -63,6 +63,7 @@ abstract class DtoTestCase extends TestCase
                 $publicGetSetters[$result[1]]['get'] = $method;
             }
         }
+        $publicGetSetters = array_filter($publicGetSetters, static fn ($value) => isset($value['get'], $value['set']));
 
         if (count($publicGetSetters) === 0) {
             if ($this->markEmptyAsSkipped) {
