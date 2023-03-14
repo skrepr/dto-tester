@@ -63,7 +63,7 @@ abstract class DtoTestCase extends TestCase
                 $publicGetSetters[$result[1]]['get'] = $method;
             }
         }
-        $publicGetSetters = array_filter($publicGetSetters, static fn ($value) => isset($value['get'], $value['set']));
+        $publicGetSetters = array_filter($publicGetSetters, static fn ($value): bool => isset($value['get'], $value['set']));
 
         if (count($publicGetSetters) === 0) {
             if ($this->markEmptyAsSkipped) {
@@ -128,7 +128,11 @@ abstract class DtoTestCase extends TestCase
             foreach ($values as $value) {
                 $getSetter['set']->invoke($object, $value);
                 $result = $getSetter['get']->invoke($object);
-                self::assertEquals($type->getName(), get_debug_type($result), 'Result type failure for ' . get_class($object) . '::' . $getSetter['get']->getName() . '()');
+                if (class_exists($type->getName())) {
+                    self::assertInstanceOf($type->getName(), $result, 'Result type failure for ' . get_class($object) . '::' . $getSetter['get']->getName() . '()');
+                } else {
+                    self::assertEquals($type->getName(), get_debug_type($result), 'Result type failure for ' . get_class($object) . '::' . $getSetter['get']->getName() . '()');
+                }
                 self::assertEquals($value, $result, 'Get/Set failure for ' . get_class($object) . '::' . $getSetter['set']->getName() . '()');
             }
         }
