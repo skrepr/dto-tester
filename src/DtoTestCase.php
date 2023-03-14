@@ -128,7 +128,8 @@ abstract class DtoTestCase extends TestCase
             foreach ($values as $value) {
                 $getSetter['set']->invoke($object, $value);
                 $result = $getSetter['get']->invoke($object);
-                if (class_exists($type->getName())) {
+
+                if (class_exists($type->getName()) || interface_exists($type->getName())) {
                     self::assertInstanceOf($type->getName(), $result, 'Result type failure for ' . get_class($object) . '::' . $getSetter['get']->getName() . '()');
                 } else {
                     self::assertEquals($type->getName(), get_debug_type($result), 'Result type failure for ' . get_class($object) . '::' . $getSetter['get']->getName() . '()');
