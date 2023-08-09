@@ -95,7 +95,11 @@ abstract class DtoTestCase extends TestCase
 
     private function doTestsForProperty(mixed $object, \ReflectionProperty $property, \ReflectionNamedType $type): void
     {
-        $values = $this->getTestValuesForProperty($property->getName(), $type->getName());
+        try {
+            $values = $this->getTestValuesForProperty($property->getName(), $type->getName());
+        } catch (\UnhandledMatchError $matchError) {
+            throw new \UnhandledMatchError('Property "' . get_class($object) . '::' . $property->getName() . '" doesn\'t have a match for type "' . $type->getName() . '"', previous: $matchError);
+        }
 
         if ($values !== null) {
             foreach ($values as $value) {
@@ -122,7 +126,11 @@ abstract class DtoTestCase extends TestCase
 
     private function doTestsForGetSetter(mixed $object, array $getSetter, \ReflectionParameter $parameter, string $methodName, \ReflectionNamedType $type): void
     {
-        $values = $this->getTestValuesForMethod($methodName, $parameter->getName(), $type->getName());
+        try {
+            $values = $this->getTestValuesForMethod($methodName, $parameter->getName(), $type->getName());
+        } catch (\UnhandledMatchError $matchError) {
+            throw new \UnhandledMatchError('Parameter "' . $parameter->getName() . '" for method "' . get_class($object) . '::' . $methodName . '" doesn\'t have a match for type "' . $type->getName() . '"');
+        }
 
         if ($values !== null) {
             foreach ($values as $value) {

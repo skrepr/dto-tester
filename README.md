@@ -46,6 +46,20 @@ The `getTestValuesForMethod` method works in the same way, it only gives back th
 
 For union types, the property/parameter will be tested for every type in the union.
 
+When you don't have special needs, you can use "match" like this:
+```php
+    protected function getTestValuesForMethod(string $methodName, string $parameterName, string $parameterType): ?array
+    {
+        return match ($parameterType) {
+            'int' => [1, 42, 1337],
+            'string' => ['test', 'skrper'],
+            'bool' => [true, false],
+            SomeClass::class => [new SomeClass(), $this->createMock(SomeClass::class)]
+        };
+    }
+```
+It is not recommended to use a "default" when using a match like this. 
+In fact, you will get a nice readable exception, so you know what you missed. 
 
 
 ## Known issues
